@@ -1,0 +1,431 @@
+/* ==========================================================
+   BioMatch — Styles
+   Scientific aesthetic with category color-coding:
+     DNA       → blue   (#3B82F6)
+     Protein   → green  (#22C55E)
+     Organelle → purple (#A855F7)
+     Process   → orange (#F97316)
+     Molecule  → teal   (#14B8A6)
+     Enzyme    → red    (#EF4444)
+     Special   → gold   (#EAB308)
+   ========================================================== */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --accent: #38bdf8;
+  --dna: #3B82F6;
+  --protein: #22C55E;
+  --organelle: #A855F7;
+  --process: #F97316;
+  --molecule: #14B8A6;
+  --enzyme: #EF4444;
+  --special: #EAB308;
+  --card-back: #334155;
+  --radius: 12px;
+  --transition: 0.5s;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#app {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* ---------- HUD ---------- */
+#hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.hud-label {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hud-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.hud-sublabel {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+#new-game-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+#new-game-btn:hover { opacity: 0.85; }
+
+/* ---------- Countdown Bar ---------- */
+#countdown-bar-container {
+  height: 4px;
+  background: var(--surface);
+  border-radius: 2px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+#countdown-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width linear;
+}
+
+#countdown-bar.active {
+  width: 100%;
+}
+
+/* ---------- Grid ---------- */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+/* ---------- Card ---------- */
+.card {
+  position: relative;
+  aspect-ratio: 1 / 1.2;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.card.matched {
+  pointer-events: none;
+}
+
+.card.matched .card-inner {
+  animation: matchPop 0.5s ease forwards;
+}
+
+@keyframes matchPop {
+  0%   { transform: rotateY(180deg) scale(1); opacity: 1; }
+  50%  { transform: rotateY(180deg) scale(1.15); opacity: 0.8; }
+  100% { transform: rotateY(180deg) scale(0); opacity: 0; }
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform var(--transition) ease;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Card back — molecular / lab pattern */
+.card-back {
+  background: var(--card-back);
+  border: 2px solid #475569;
+  /* Subtle DNA helix pattern via repeating gradient */
+  background-image:
+    radial-gradient(circle at 30% 30%, rgba(56,189,248,0.08) 0%, transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(168,85,247,0.08) 0%, transparent 60%);
+}
+
+.card-back::after {
+  content: '\1F9EA'; /* test tube emoji */
+  font-size: 1.8rem;
+  opacity: 0.5;
+}
+
+/* Card front */
+.card-front {
+  background: var(--surface);
+  transform: rotateY(180deg);
+  border: 2px solid;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.card-category {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+
+.card-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  word-break: break-word;
+  line-height: 1.15;
+}
+
+.card-countdown {
+  font-size: 0.65rem;
+  opacity: 0.6;
+  margin-top: auto;
+}
+
+/* Category color borders & text */
+.card-front.cat-dna        { border-color: var(--dna);       color: var(--dna); }
+.card-front.cat-protein     { border-color: var(--protein);   color: var(--protein); }
+.card-front.cat-organelle   { border-color: var(--organelle); color: var(--organelle); }
+.card-front.cat-process     { border-color: var(--process);   color: var(--process); }
+.card-front.cat-molecule    { border-color: var(--molecule);  color: var(--molecule); }
+.card-front.cat-enzyme      { border-color: var(--enzyme);    color: var(--enzyme); }
+.card-front.cat-special     { border-color: var(--special);   color: var(--special); }
+
+/* Special card glow */
+.card-front.cat-special {
+  box-shadow: 0 0 12px rgba(234,179,8,0.4);
+}
+
+/* ---------- Match Overlay ---------- */
+#match-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+#match-overlay span {
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow: 0 0 30px rgba(56,189,248,0.6);
+  animation: matchBurst 0.8s ease forwards;
+}
+
+@keyframes matchBurst {
+  0%   { transform: scale(0.3); opacity: 0; }
+  50%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+#match-overlay.hidden { display: none; }
+
+/* ---------- Modal (Trivia & Win) ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+.modal.hidden { display: none; }
+
+.modal-content {
+  background: var(--surface);
+  border: 1px solid #475569;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.modal-icon {
+  font-size: 1.8rem;
+}
+
+.modal-header h2 {
+  font-size: 1.4rem;
+  color: var(--special);
+}
+
+.trivia-difficulty {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+.trivia-difficulty.easy   { background: #166534; color: #bbf7d0; }
+.trivia-difficulty.medium { background: #854d0e; color: #fef08a; }
+.trivia-difficulty.hard   { background: #991b1b; color: #fecaca; }
+
+.trivia-question {
+  font-size: 1.05rem;
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+
+.trivia-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.trivia-choice-btn {
+  background: #1e293b;
+  border: 2px solid #475569;
+  color: var(--text);
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+}
+.trivia-choice-btn:hover {
+  border-color: var(--accent);
+  background: #283548;
+}
+.trivia-choice-btn.correct {
+  border-color: var(--protein);
+  background: rgba(34,197,94,0.15);
+  pointer-events: none;
+}
+.trivia-choice-btn.wrong {
+  border-color: var(--enzyme);
+  background: rgba(239,68,68,0.15);
+  pointer-events: none;
+}
+
+.trivia-feedback {
+  margin-top: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.trivia-feedback.hidden { display: none; }
+
+/* ---------- Celebration ---------- */
+.celebration h1 {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.celebration p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+#next-level-btn {
+  display: block;
+  margin: 0 auto;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+#next-level-btn:hover { opacity: 0.85; }
+
+/* ---------- Confetti Canvas ---------- */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 300;
+}
+
+/* ---------- Shuffle animation ---------- */
+.card.shuffling .card-inner {
+  animation: shuffleWiggle 0.6s ease;
+}
+
+@keyframes shuffleWiggle {
+  0%   { transform: translateX(0) rotateZ(0); }
+  25%  { transform: translateX(-12px) rotateZ(-5deg); }
+  50%  { transform: translateX(12px) rotateZ(5deg); }
+  75%  { transform: translateX(-6px) rotateZ(-2deg); }
+  100% { transform: translateX(0) rotateZ(0); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 500px) {
+  #grid { gap: 6px; }
+  .card-label { font-size: 0.65rem; }
+  .card-category { font-size: 0.45rem; }
+  .card-back::after { font-size: 1.2rem; }
+  #match-overlay span { font-size: 2.5rem; }
+  #hud { padding: 0.5rem; }
+  .hud-value { font-size: 1rem; }
+}
+
+@media (max-width: 360px) {
+  .card-label { font-size: 0.55rem; }
+  #grid { gap: 4px; }
+}
