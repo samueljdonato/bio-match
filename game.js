@@ -631,5 +631,64 @@ function startGame() {
   startTimer();
 }
 
+// ==================== 12. TAB NAVIGATION & STUDY PAGE ====================
+
+const tabButtons = document.querySelectorAll(".tab-btn");
+const pageGame   = document.getElementById("page-game");
+const pageStudy  = document.getElementById("page-study");
+const studyList  = document.getElementById("study-list");
+
+/** Switch between Play and Study tabs. */
+tabButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const tab = btn.dataset.tab;
+
+    // Update active tab button.
+    tabButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // Show/hide pages.
+    if (tab === "game") {
+      pageGame.classList.remove("hidden");
+      pageStudy.classList.add("hidden");
+    } else {
+      pageGame.classList.add("hidden");
+      pageStudy.classList.remove("hidden");
+      renderStudyPage();
+    }
+  });
+});
+
+/** Render the study page with all term-definition pairs grouped by category. */
+function renderStudyPage() {
+  studyList.innerHTML = "";
+
+  const categoryNames = {
+    dna: "DNA Sequences",
+    protein: "Proteins",
+    organelle: "Organelles",
+    process: "Processes",
+    molecule: "Molecules",
+    enzyme: "Enzymes"
+  };
+
+  Object.keys(CONTENT_POOLS).forEach(cat => {
+    const heading = document.createElement("h3");
+    heading.className = `study-category-heading cat-${cat}`;
+    heading.textContent = categoryNames[cat] || cat;
+    studyList.appendChild(heading);
+
+    CONTENT_POOLS[cat].forEach(item => {
+      const card = document.createElement("div");
+      card.className = `study-card cat-${cat}`;
+      card.innerHTML = `
+        <div class="study-term">${item.term}</div>
+        <div class="study-definition">${item.definition}</div>
+      `;
+      studyList.appendChild(card);
+    });
+  });
+}
+
 // Start on load.
 startGame();

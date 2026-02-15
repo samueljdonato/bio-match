@@ -50,6 +50,41 @@ body {
   max-width: 700px;
 }
 
+/* ---------- Tab Navigation ---------- */
+#tab-bar {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 0.25rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tab-btn:hover {
+  color: var(--text);
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ---------- Pages ---------- */
+.page.hidden { display: none; }
+
 /* ---------- HUD ---------- */
 #hud {
   display: flex;
@@ -440,6 +475,78 @@ body {
   75%  { transform: translateX(-6px) rotateZ(-2deg); }
   100% { transform: translateX(0) rotateZ(0); }
 }
+
+/* ---------- Study Page ---------- */
+.study-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+.study-subtitle {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.study-category-heading {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #334155;
+}
+
+.study-card {
+  display: flex;
+  align-items: stretch;
+  background: var(--surface);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #334155;
+}
+
+.study-term {
+  flex: 0 0 35%;
+  padding: 0.75rem;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-right: 2px solid;
+}
+
+.study-definition {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+}
+
+/* Category colors for study cards */
+.study-card.cat-dna        .study-term { color: var(--dna);       border-color: var(--dna); }
+.study-card.cat-protein     .study-term { color: var(--protein);   border-color: var(--protein); }
+.study-card.cat-organelle   .study-term { color: var(--organelle); border-color: var(--organelle); }
+.study-card.cat-process     .study-term { color: var(--process);   border-color: var(--process); }
+.study-card.cat-molecule    .study-term { color: var(--molecule);  border-color: var(--molecule); }
+.study-card.cat-enzyme      .study-term { color: var(--enzyme);    border-color: var(--enzyme); }
+
+.study-category-heading.cat-dna       { color: var(--dna); }
+.study-category-heading.cat-protein    { color: var(--protein); }
+.study-category-heading.cat-organelle  { color: var(--organelle); }
+.study-category-heading.cat-process    { color: var(--process); }
+.study-category-heading.cat-molecule   { color: var(--molecule); }
+.study-category-heading.cat-enzyme     { color: var(--enzyme); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 500px) {

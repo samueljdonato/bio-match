@@ -26,6 +26,15 @@
        ============================================================ -->
 
   <div id="app">
+    <!-- Tab Navigation -->
+    <nav id="tab-bar">
+      <button class="tab-btn active" data-tab="game">Play</button>
+      <button class="tab-btn" data-tab="study">Study</button>
+    </nav>
+
+    <!-- ==================== GAME PAGE ==================== -->
+    <div id="page-game" class="page">
+
     <!-- Header / HUD -->
     <header id="hud">
       <div class="hud-item">
@@ -84,6 +93,16 @@
 
     <!-- Confetti canvas -->
     <canvas id="confetti-canvas"></canvas>
+
+    </div><!-- /page-game -->
+
+    <!-- ==================== STUDY PAGE ==================== -->
+    <div id="page-study" class="page hidden">
+      <h2 class="study-title">Study Guide</h2>
+      <p class="study-subtitle">Review all term-definition pairs before playing.</p>
+      <div id="study-list"></div>
+    </div>
+
   </div>
 
   <script src="questions.js"></script>
