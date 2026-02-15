@@ -104,7 +104,8 @@ let state = {
   timerInterval: null,
   elapsedSeconds: 0,
   triviaUsed: new Set(),// Track used trivia question indices
-  specialTriggered: false
+  specialTriggered: false,
+  gameMode: "definitions" // "definitions" or "images"
 };
 
 // DOM refs
@@ -146,6 +147,14 @@ document.getElementById("next-level-btn").addEventListener("click", () => {
  * making visual discrimination harder (e.g., all proteins).
  */
 function generateCards() {
+  if (state.gameMode === "images") {
+    return generateImageCards();
+  }
+  return generateDefinitionCards();
+}
+
+/** Generate cards for Terms & Definitions mode. */
+function generateDefinitionCards() {
   const all = getAllContent();
 
   // For higher levels, restrict to fewer categories to increase difficulty.
@@ -158,15 +167,11 @@ function generateCards() {
     pool = cats.flatMap(c => CONTENT_POOLS[c]);
   }
 
-  // Ensure we have at least 12 unique items; fall back to full pool if needed.
   if (pool.length < 12) pool = all;
-
   const chosen = pickRandom(pool, 12);
 
   const cards = [];
   chosen.forEach((item, i) => {
-    // One card shows the TERM, the other shows the DEFINITION.
-    // Both share the same pairId so the match logic can link them.
     cards.push({
       id: i * 2, pairId: i, label: item.term,
       category: item.category, isSpecial: false, cardType: "term"
@@ -177,9 +182,31 @@ function generateCards() {
     });
   });
 
-  // Add the special card (id = 24).
   cards.push({ id: 24, pairId: -1, label: "WILD", category: "special", isSpecial: true, cardType: "special" });
+  shuffle(cards);
+  return cards;
+}
 
+/**
+ * Generate cards for Terms & Images mode.
+ * One card shows the term text, its match shows an SVG drawing.
+ */
+function generateImageCards() {
+  const chosen = pickRandom(IMAGE_CONTENT_POOL, 12);
+
+  const cards = [];
+  chosen.forEach((item, i) => {
+    cards.push({
+      id: i * 2, pairId: i, label: item.term,
+      category: item.category, isSpecial: false, cardType: "term"
+    });
+    cards.push({
+      id: i * 2 + 1, pairId: i, label: item.drawingKey,
+      category: item.category, isSpecial: false, cardType: "image"
+    });
+  });
+
+  cards.push({ id: 24, pairId: -1, label: "WILD", category: "special", isSpecial: true, cardType: "special" });
   shuffle(cards);
   return cards;
 }
@@ -204,11 +231,21 @@ function renderGrid() {
       ? "card-label card-label-def"
       : isSingleWord ? "card-label card-label-single" : "card-label";
 
+    // Image cards render an SVG drawing instead of text.
+    let cardContent;
+    if (card.isSpecial) {
+      cardContent = `<span class="card-label">&#x2728;</span>`;
+    } else if (card.cardType === "image") {
+      cardContent = `<div class="card-image">${BIO_DRAWINGS[card.label] || card.label}</div>`;
+    } else {
+      cardContent = `<span class="${labelClass}">${card.label}</span>`;
+    }
+
     el.innerHTML = `
       <div class="card-inner">
         <div class="card-face card-back"></div>
         <div class="card-face card-front cat-${card.category} type-${card.cardType}">
-          <span class="${labelClass}">${card.isSpecial ? "&#x2728;" : card.label}</span>
+          ${cardContent}
           <span class="card-countdown"></span>
         </div>
       </div>
@@ -631,7 +668,31 @@ function startGame() {
   startTimer();
 }
 
-// ==================== 12. TAB NAVIGATION & STUDY PAGE ====================
+// ==================== 12. GAME MODE SWITCHING ====================
+
+const modeButtons = document.querySelectorAll(".mode-btn");
+
+modeButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const mode = btn.dataset.mode;
+    if (mode === state.gameMode) return;
+
+    // Update active mode button.
+    modeButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    state.gameMode = mode;
+    state.level = 1;
+    startGame();
+
+    // Re-render study page if it's currently visible.
+    if (!pageStudy.classList.contains("hidden")) {
+      renderStudyPage();
+    }
+  });
+});
+
+// ==================== 13. TAB NAVIGATION & STUDY PAGE ====================
 
 const tabButtons = document.querySelectorAll(".tab-btn");
 const pageGame   = document.getElementById("page-game");
@@ -643,11 +704,9 @@ tabButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     const tab = btn.dataset.tab;
 
-    // Update active tab button.
     tabButtons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
-    // Show/hide pages.
     if (tab === "game") {
       pageGame.classList.remove("hidden");
       pageStudy.classList.add("hidden");
@@ -659,10 +718,19 @@ tabButtons.forEach(btn => {
   });
 });
 
-/** Render the study page with all term-definition pairs grouped by category. */
+/** Render the study page — content depends on the current game mode. */
 function renderStudyPage() {
   studyList.innerHTML = "";
 
+  if (state.gameMode === "definitions") {
+    renderDefinitionsStudy();
+  } else {
+    renderImagesStudy();
+  }
+}
+
+/** Study page for Terms & Definitions mode. */
+function renderDefinitionsStudy() {
   const categoryNames = {
     dna: "DNA Sequences",
     protein: "Proteins",
@@ -687,6 +755,25 @@ function renderStudyPage() {
       `;
       studyList.appendChild(card);
     });
+  });
+}
+
+/** Study page for Terms & Images mode. */
+function renderImagesStudy() {
+  const heading = document.createElement("h3");
+  heading.className = "study-category-heading";
+  heading.style.color = "var(--accent)";
+  heading.textContent = "Terms & Images";
+  studyList.appendChild(heading);
+
+  IMAGE_CONTENT_POOL.forEach(item => {
+    const card = document.createElement("div");
+    card.className = `study-card cat-${item.category}`;
+    card.innerHTML = `
+      <div class="study-term">${item.term}</div>
+      <div class="study-image">${BIO_DRAWINGS[item.drawingKey] || ""}</div>
+    `;
+    studyList.appendChild(card);
   });
 }
 
