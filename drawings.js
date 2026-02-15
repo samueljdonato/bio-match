@@ -1,9 +1,54 @@
 /**
- * drawings.js — Inline SVG biology illustrations for the image matching mode.
+ * drawings.js — Biology illustrations for the image matching mode.
  *
- * Each drawing is a function returning an SVG string sized to fit a card.
- * Drawings are intentionally simple/schematic so they're clear at small sizes.
+ * Custom artwork priority system:
+ *   1. If a file exists in images/ matching the drawing key, use it.
+ *      Filename format: kebab-case of the key + extension.
+ *      Example: "Double Helix" → images/double-helix.png (or .svg, .webp, .jpg)
+ *   2. Otherwise, fall back to the inline SVG placeholder below.
+ *
+ * To replace a drawing with custom artwork:
+ *   - Save your image to the images/ folder using the filename from CUSTOM_IMAGE_FILES
+ *   - Supported formats: .svg, .png, .webp, .jpg
+ *   - Recommended size for raster images: 300x300px, transparent background
+ *   - The code will automatically use your file instead of the inline SVG
  */
+
+/**
+ * Map of drawing keys → custom image filenames in the images/ folder.
+ * Set a value to null to use the inline SVG fallback.
+ * Replace null with a filename (e.g., "double-helix.png") when artwork is ready.
+ */
+const CUSTOM_IMAGE_FILES = {
+  "Double Helix":           null,
+  "Mitochondria":           null,
+  "Ribosome":               null,
+  "Cell Membrane":          null,
+  "Nucleus":                null,
+  "Golgi Apparatus":        null,
+  "Chromosome":             null,
+  "ATP Molecule":           null,
+  "tRNA":                   null,
+  "Cell":                   null,
+  "Enzyme":                 null,
+  "Plasma Membrane Protein": null,
+  "Neuron":                 null,
+  "Virus":                  null,
+  "Phospholipid":           null,
+  "Endoplasmic Reticulum":  null
+};
+
+/**
+ * Get the HTML for a drawing — returns an <img> tag if a custom file is set,
+ * otherwise returns the inline SVG.
+ */
+function getDrawingHTML(key) {
+  const customFile = CUSTOM_IMAGE_FILES[key];
+  if (customFile) {
+    return `<img src="images/${customFile}" alt="${key}" draggable="false" />`;
+  }
+  return BIO_DRAWINGS[key] || key;
+}
 
 const BIO_DRAWINGS = {
   "Double Helix": `

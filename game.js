@@ -236,7 +236,7 @@ function renderGrid() {
     if (card.isSpecial) {
       cardContent = `<span class="card-label">&#x2728;</span>`;
     } else if (card.cardType === "image") {
-      cardContent = `<div class="card-image">${BIO_DRAWINGS[card.label] || card.label}</div>`;
+      cardContent = `<div class="card-image">${getDrawingHTML(card.label)}</div>`;
     } else {
       cardContent = `<span class="${labelClass}">${card.label}</span>`;
     }
@@ -771,7 +771,7 @@ function renderImagesStudy() {
     card.className = `study-card cat-${item.category}`;
     card.innerHTML = `
       <div class="study-term">${item.term}</div>
-      <div class="study-image">${BIO_DRAWINGS[item.drawingKey] || ""}</div>
+      <div class="study-image">${getDrawingHTML(item.drawingKey)}</div>
     `;
     studyList.appendChild(card);
   });
