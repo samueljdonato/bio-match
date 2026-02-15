@@ -131,7 +131,7 @@ body {
 /* ---------- Card ---------- */
 .card {
   position: relative;
-  aspect-ratio: 1 / 1.2;
+  aspect-ratio: 1 / 1.35;
   perspective: 800px;
   cursor: pointer;
 }
@@ -204,23 +204,50 @@ body {
 }
 
 .card-category {
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.8;
 }
 
 .card-label {
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   font-weight: 700;
   word-break: break-word;
-  line-height: 1.15;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Single-word terms shrink to fit without breaking */
+.card-label-single {
+  white-space: nowrap;
+  font-size: clamp(0.6rem, 2.5vw, 1.2rem);
+}
+
+/* Definition cards use smaller text to fit longer descriptions */
+.card-label-def {
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* Visual indicator: term cards have a solid left border accent */
+.card-front.type-term {
+  border-left-width: 4px;
+}
+
+/* Definition cards get a subtle background tint */
+.card-front.type-definition {
+  background: rgba(30, 41, 59, 0.95);
+  border-style: dashed;
 }
 
 .card-countdown {
+  position: absolute;
+  bottom: 0.3rem;
   font-size: 0.65rem;
   opacity: 0.6;
-  margin-top: auto;
 }
 
 /* Category color borders & text */
@@ -417,7 +444,8 @@ body {
 /* ---------- Responsive ---------- */
 @media (max-width: 500px) {
   #grid { gap: 6px; }
-  .card-label { font-size: 0.65rem; }
+  .card-label { font-size: 0.8rem; }
+  .card-label-def { font-size: 0.55rem; }
   .card-category { font-size: 0.45rem; }
   .card-back::after { font-size: 1.2rem; }
   #match-overlay span { font-size: 2.5rem; }
@@ -426,6 +454,7 @@ body {
 }
 
 @media (max-width: 360px) {
-  .card-label { font-size: 0.55rem; }
+  .card-label { font-size: 0.7rem; }
+  .card-label-def { font-size: 0.5rem; }
   #grid { gap: 4px; }
 }

@@ -13,49 +13,51 @@
  */
 
 // ==================== 1. CONTENT POOLS ====================
-// Each entry: { label, category }
-// Categories control color-coding on the card face.
+// Each entry: { term, definition, category }
+// One card shows the term, its match shows the definition.
+// This turns the game into a vocabulary learning tool — players
+// must memorize both positions AND term-definition associations.
 
 const CONTENT_POOLS = {
   dna: [
-    { label: "ATCG",  category: "dna" },
-    { label: "GCTA",  category: "dna" },
-    { label: "TAAT",  category: "dna" },
-    { label: "CCGG",  category: "dna" }
+    { term: "ATCG",  definition: "The four nucleotide bases of DNA: Adenine, Thymine, Cytosine, Guanine", category: "dna" },
+    { term: "GCTA",  definition: "Complementary base sequence to ATCG on the opposite DNA strand", category: "dna" },
+    { term: "TAAT",  definition: "A palindromic DNA sequence commonly found in TATA box promoter regions", category: "dna" },
+    { term: "CCGG",  definition: "A restriction enzyme recognition site cut by MspI and HpaII", category: "dna" }
   ],
   protein: [
-    { label: "Actin",    category: "protein" },
-    { label: "Myosin",   category: "protein" },
-    { label: "Histone",  category: "protein" },
-    { label: "Tubulin",  category: "protein" },
-    { label: "Collagen", category: "protein" }
+    { term: "Actin",    definition: "Cytoskeletal protein that forms microfilaments and enables cell movement", category: "protein" },
+    { term: "Myosin",   definition: "Motor protein that walks along actin filaments to drive muscle contraction", category: "protein" },
+    { term: "Histone",  definition: "Protein spool that packages and organizes DNA into chromatin", category: "protein" },
+    { term: "Tubulin",  definition: "Structural protein that polymerizes into microtubules of the cytoskeleton", category: "protein" },
+    { term: "Collagen", definition: "Triple-helix structural protein providing strength to connective tissues", category: "protein" }
   ],
   organelle: [
-    { label: "Mitochondrion", category: "organelle" },
-    { label: "Ribosome",      category: "organelle" },
-    { label: "Nucleus",       category: "organelle" },
-    { label: "ER",            category: "organelle" },
-    { label: "Golgi",         category: "organelle" }
+    { term: "Mitochondrion", definition: "The powerhouse of the cell; generates ATP via oxidative phosphorylation", category: "organelle" },
+    { term: "Ribosome",      definition: "Molecular machine that translates mRNA into polypeptide chains", category: "organelle" },
+    { term: "Nucleus",       definition: "Membrane-bound organelle housing the cell's DNA and controlling gene expression", category: "organelle" },
+    { term: "ER",            definition: "Endoplasmic reticulum; network for protein folding and lipid synthesis", category: "organelle" },
+    { term: "Golgi",         definition: "Golgi apparatus; modifies, sorts, and packages proteins for secretion", category: "organelle" }
   ],
   process: [
-    { label: "Transcription", category: "process" },
-    { label: "Translation",   category: "process" },
-    { label: "Replication",   category: "process" },
-    { label: "Splicing",      category: "process" }
+    { term: "Transcription", definition: "The process of copying DNA into messenger RNA by RNA polymerase", category: "process" },
+    { term: "Translation",   definition: "The process of decoding mRNA into a protein at the ribosome", category: "process" },
+    { term: "Replication",   definition: "The duplication of DNA to produce two identical copies before cell division", category: "process" },
+    { term: "Splicing",      definition: "Removal of introns and joining of exons in pre-mRNA processing", category: "process" }
   ],
   molecule: [
-    { label: "ATP",     category: "molecule" },
-    { label: "DNA",     category: "molecule" },
-    { label: "RNA",     category: "molecule" },
-    { label: "tRNA",    category: "molecule" },
-    { label: "mRNA",    category: "molecule" },
-    { label: "Glucose", category: "molecule" }
+    { term: "ATP",     definition: "Adenosine triphosphate; the primary energy currency of the cell", category: "molecule" },
+    { term: "DNA",     definition: "Deoxyribonucleic acid; the double-stranded genetic blueprint of life", category: "molecule" },
+    { term: "RNA",     definition: "Ribonucleic acid; single-stranded molecule essential for gene expression", category: "molecule" },
+    { term: "tRNA",    definition: "Transfer RNA; carries amino acids to the ribosome during translation", category: "molecule" },
+    { term: "mRNA",    definition: "Messenger RNA; carries the genetic code from DNA to the ribosome", category: "molecule" },
+    { term: "Glucose", definition: "A six-carbon sugar that is the primary substrate for cellular respiration", category: "molecule" }
   ],
   enzyme: [
-    { label: "Polymerase", category: "enzyme" },
-    { label: "Ligase",     category: "enzyme" },
-    { label: "Helicase",   category: "enzyme" },
-    { label: "Primase",    category: "enzyme" }
+    { term: "Polymerase", definition: "Enzyme that synthesizes DNA or RNA strands from a template", category: "enzyme" },
+    { term: "Ligase",     definition: "Enzyme that joins broken DNA strands by forming phosphodiester bonds", category: "enzyme" },
+    { term: "Helicase",   definition: "Enzyme that unwinds the DNA double helix during replication", category: "enzyme" },
+    { term: "Primase",    definition: "Enzyme that synthesizes short RNA primers to initiate DNA replication", category: "enzyme" }
   ]
 };
 
@@ -130,10 +132,15 @@ document.getElementById("next-level-btn").addEventListener("click", () => {
 // ==================== 4. CARD GENERATION ====================
 /**
  * Generate 25 cards: 12 pairs (24 cards) + 1 special card.
- * Each card object: { id, pairId, label, category, isSpecial }
- *   - `id` is a unique index (0–24).
- *   - `pairId` groups two cards that form a pair.
- *   - `isSpecial` flags the wild/trivia card.
+ * Each card object: { id, pairId, label, category, isSpecial, cardType }
+ *   - `id`       — unique index (0–24).
+ *   - `pairId`   — groups two cards that form a pair.
+ *   - `label`    — text displayed on the card face.
+ *   - `cardType` — "term" or "definition" (determines visual style).
+ *   - `isSpecial` — flags the wild/trivia card.
+ *
+ * Matching logic: a TERM card matches its DEFINITION card (same pairId).
+ * Players must learn both the vocabulary and its meaning to succeed.
  *
  * Level progression: higher levels draw from fewer categories,
  * making visual discrimination harder (e.g., all proteins).
@@ -144,11 +151,9 @@ function generateCards() {
   // For higher levels, restrict to fewer categories to increase difficulty.
   let pool = all;
   if (state.level >= 4) {
-    // Pick 2 random categories
     const cats = shuffle(Object.keys(CONTENT_POOLS)).slice(0, 2);
     pool = cats.flatMap(c => CONTENT_POOLS[c]);
   } else if (state.level >= 2) {
-    // Pick 4 random categories
     const cats = shuffle(Object.keys(CONTENT_POOLS)).slice(0, 4);
     pool = cats.flatMap(c => CONTENT_POOLS[c]);
   }
@@ -160,13 +165,20 @@ function generateCards() {
 
   const cards = [];
   chosen.forEach((item, i) => {
-    // Two cards per pair share the same pairId.
-    cards.push({ id: i * 2,     pairId: i, label: item.label, category: item.category, isSpecial: false });
-    cards.push({ id: i * 2 + 1, pairId: i, label: item.label, category: item.category, isSpecial: false });
+    // One card shows the TERM, the other shows the DEFINITION.
+    // Both share the same pairId so the match logic can link them.
+    cards.push({
+      id: i * 2, pairId: i, label: item.term,
+      category: item.category, isSpecial: false, cardType: "term"
+    });
+    cards.push({
+      id: i * 2 + 1, pairId: i, label: item.definition,
+      category: item.category, isSpecial: false, cardType: "definition"
+    });
   });
 
   // Add the special card (id = 24).
-  cards.push({ id: 24, pairId: -1, label: "WILD", category: "special", isSpecial: true });
+  cards.push({ id: 24, pairId: -1, label: "WILD", category: "special", isSpecial: true, cardType: "special" });
 
   shuffle(cards);
   return cards;
@@ -186,12 +198,17 @@ function renderGrid() {
       el.classList.add("matched");
     }
 
+    // Single-word terms get a special class so they never line-break.
+    const isSingleWord = card.cardType === "term" && !card.label.includes(" ");
+    const labelClass = card.cardType === "definition"
+      ? "card-label card-label-def"
+      : isSingleWord ? "card-label card-label-single" : "card-label";
+
     el.innerHTML = `
       <div class="card-inner">
         <div class="card-face card-back"></div>
-        <div class="card-face card-front cat-${card.category}">
-          <span class="card-category">${card.isSpecial ? "SPECIAL" : card.category}</span>
-          <span class="card-label">${card.isSpecial ? "&#x2728;" : card.label}</span>
+        <div class="card-face card-front cat-${card.category} type-${card.cardType}">
+          <span class="${labelClass}">${card.isSpecial ? "&#x2728;" : card.label}</span>
           <span class="card-countdown"></span>
         </div>
       </div>
@@ -289,11 +306,11 @@ function startCountdownBar() {
 
 // ==================== 7. MATCH EVALUATION ====================
 /**
- * Molecular biology matching logic:
- *   Two cards "match" if they share the same pairId — meaning they
- *   represent the same biological term (e.g., both say "Helicase").
- *   This tests recall of molecular biology vocabulary: students must
- *   remember the position of each term on the grid.
+ * Term-definition matching logic:
+ *   Two cards "match" if they share the same pairId — meaning one is a
+ *   vocabulary TERM and the other is its DEFINITION. For example, clicking
+ *   "Helicase" and then "Enzyme that unwinds the DNA double helix" is a
+ *   match. This tests both spatial memory and biology knowledge.
  */
 
 function evaluateMatch() {
