@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioMatch — BioGames</title>
+  <link rel="stylesheet" href="../../shared/styles.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- ============================================================
+       BioMatch: A molecular biology-themed memory matching game.
+
+       Game Logic Overview:
+       - 5x5 grid = 25 cards (12 matched pairs + 1 special "wild" card)
+       - Cards are drawn from biology content pools (DNA, proteins,
+         organelles, processes, molecules, enzymes) and color-coded
+         by category.
+       - Clicking a card reveals it for 3 seconds with a countdown.
+       - If two revealed cards match, they disappear with a "MATCH!!"
+         animation and score increments.
+       - If they don't match, both flip back after the 3-sec window.
+       - The special card triggers a multiple-choice biology trivia
+         question. Correct = one pair is auto-removed; Wrong = board
+         is reshuffled.
+       - Timer tracks completion time. Confetti celebration on win.
+       ============================================================ -->
+
+  <div id="app">
+    <!-- Tab Navigation -->
+    <nav id="tab-bar">
+      <button class="tab-btn active" data-tab="game">Play</button>
+      <button class="tab-btn" data-tab="study">Study</button>
+    </nav>
+
+    <!-- Game Mode Selector (visible on both pages) -->
+    <div id="mode-bar">
+      <span class="mode-label">Mode:</span>
+      <button class="mode-btn active" data-mode="definitions">Terms &amp; Definitions</button>
+      <button class="mode-btn" data-mode="images">Terms &amp; Images</button>
+    </div>
+
+    <!-- ==================== GAME PAGE ==================== -->
+    <div id="page-game" class="page">
+
+    <!-- Header / HUD -->
+    <header id="hud">
+      <div class="hud-item">
+        <span class="hud-label">Score</span>
+        <span id="score" class="hud-value">0</span>
+        <span class="hud-sublabel">/ <span id="total-pairs">12</span></span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Time</span>
+        <span id="timer" class="hud-value">0:00</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Level</span>
+        <span id="level" class="hud-value">1</span>
+      </div>
+      <div class="hud-item">
+        <button id="new-game-btn" title="New Game">&#x21bb; New Game</button>
+      </div>
+    </header>
+
+    <!-- Countdown bar shown when a card is revealed -->
+    <div id="countdown-bar-container">
+      <div id="countdown-bar"></div>
+    </div>
+
+    <!-- 5x5 Card Grid -->
+    <main id="grid"></main>
+
+    <!-- Match animation overlay -->
+    <div id="match-overlay" class="hidden">
+      <span>MATCH!!</span>
+    </div>
+
+    <!-- Trivia modal for the special card -->
+    <div id="trivia-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="modal-icon">&#x1F9EC;</span> <!-- DNA emoji -->
+          <h2>Biology Trivia!</h2>
+        </div>
+        <p id="trivia-difficulty" class="trivia-difficulty"></p>
+        <p id="trivia-question" class="trivia-question"></p>
+        <div id="trivia-choices" class="trivia-choices"></div>
+        <p id="trivia-feedback" class="trivia-feedback hidden"></p>
+      </div>
+    </div>
+
+    <!-- Win / celebration overlay -->
+    <div id="win-overlay" class="modal hidden">
+      <div class="modal-content celebration">
+        <h1>&#127881; Ta-Da! &#127881;</h1>
+        <p id="win-message"></p>
+        <button id="next-level-btn">Next Level &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Confetti canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    </div><!-- /page-game -->
+
+    <!-- ==================== STUDY PAGE ==================== -->
+    <div id="page-study" class="page hidden">
+      <h2 class="study-title">Study Guide</h2>
+      <p class="study-subtitle">Review all term-definition pairs before playing.</p>
+      <div id="study-list"></div>
+    </div>
+
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="drawings.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

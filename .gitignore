@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+Icon?
+**/.DS_Store
+
+# Editor
+.vscode/
+.idea/

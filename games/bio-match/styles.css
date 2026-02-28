@@ -1,6 +1,6 @@
 /* ==========================================================
-   BioMatch — Styles
-   Scientific aesthetic with category color-coding:
+   BioMatch — Game Styles
+   Category color-coding:
      DNA       → blue   (#3B82F6)
      Protein   → green  (#22C55E)
      Organelle → purple (#A855F7)
@@ -8,38 +8,11 @@
      Molecule  → teal   (#14B8A6)
      Enzyme    → red    (#EF4444)
      Special   → gold   (#EAB308)
+   Shared base styles (reset, :root, body) live in ../../shared/styles.css
    ========================================================== */
 
-/* ---------- Reset & Base ---------- */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --text: #e2e8f0;
-  --text-dim: #94a3b8;
-  --accent: #38bdf8;
-  --dna: #3B82F6;
-  --protein: #22C55E;
-  --organelle: #A855F7;
-  --process: #F97316;
-  --molecule: #14B8A6;
-  --enzyme: #EF4444;
-  --special: #EAB308;
-  --card-back: #334155;
-  --radius: 12px;
-  --transition: 0.5s;
-}
-
+/* ---------- Game Layout ---------- */
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 1rem;
