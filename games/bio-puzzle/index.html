@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bio Puzzle — BioGames</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SELECTION SCREEN -->
+<div id="select-screen">
+  <a href="../../" class="select-back">← BioGames</a>
+  <h1 class="select-title">Bio Puzzle</h1>
+  <p class="select-subtitle">Biology illustrations cut into unique jigsaw puzzles — randomly sliced fresh every play.</p>
+
+  <section class="diff-section">
+    <h2 class="diff-heading easy">Easy <span class="diff-meta">4 × 4 · 16 pieces</span></h2>
+    <div class="puzzle-grid" id="grid-easy"></div>
+  </section>
+
+  <section class="diff-section">
+    <h2 class="diff-heading medium">Medium <span class="diff-meta">6 × 6 · 36 pieces</span></h2>
+    <div class="puzzle-grid" id="grid-medium"></div>
+  </section>
+
+  <section class="diff-section">
+    <h2 class="diff-heading hard">Hard <span class="diff-meta">8 × 8 · 64 pieces</span></h2>
+    <div class="puzzle-grid" id="grid-hard"></div>
+  </section>
+</div>
+
+<!-- WORKBENCH -->
+<div id="workbench" style="display:none">
+  <a id="back-btn" href="#">← Select Puzzle</a>
+  <canvas id="game-canvas"></canvas>
+</div>
+
+<div id="toast"></div>
+
+<script src="puzzles.js"></script>
+<script src="jigsaw.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

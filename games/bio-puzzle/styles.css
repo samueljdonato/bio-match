@@ -1,0 +1,159 @@
+@import '../../shared/styles.css';
+
+/* ===== SELECTION SCREEN ===== */
+
+#select-screen {
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.select-back {
+  display: inline-block;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.88rem;
+  margin-bottom: 1.75rem;
+  transition: color 0.2s;
+}
+.select-back:hover { color: var(--accent); }
+
+.select-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0 0 0.3rem;
+}
+.select-subtitle {
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  margin: 0 0 2.5rem;
+}
+
+.diff-section { margin-bottom: 2.5rem; }
+
+.diff-heading {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.diff-heading .diff-meta {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.diff-heading.easy   { color: #22c55e; }
+.diff-heading.medium { color: #f97316; }
+.diff-heading.hard   { color: #ef4444; }
+
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.puzzle-card {
+  background: var(--surface);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.puzzle-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 24px rgba(56,189,248,0.1);
+}
+
+.puzzle-thumb {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  border-radius: 6px;
+  image-rendering: crisp-edges;
+}
+
+.puzzle-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+.puzzle-card-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* ===== WORKBENCH ===== */
+
+#workbench {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #050d1a;
+}
+
+#game-canvas {
+  display: block;
+  cursor: grab;
+}
+#game-canvas.dragging { cursor: grabbing; }
+
+/* Back button overlaid on workbench */
+#back-btn {
+  position: fixed;
+  top: 12px;
+  left: 16px;
+  background: rgba(5,13,26,0.85);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 6px 14px;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  z-index: 20;
+  display: none;
+}
+#back-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  opacity: 0;
+  transition: opacity 0.28s, transform 0.28s;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+}
+#toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
